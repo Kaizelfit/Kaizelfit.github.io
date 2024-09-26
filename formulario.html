@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulario de Entrenamiento Personalizado</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('BANNERyoutube.jpg');
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+        }
+
+        .page {
+            display: none;
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+            z-index: 1;
+        }
+
+        .page.active {
+            display: block;
+        }
+
+        /* Estilo para el logo que esté centrado y reducido en tamaño */
+        .logo {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            opacity: 0.05;
+            max-width: 72%;
+            height: auto;
+            z-index: 0;
+            pointer-events: none;
+        }
+
+       /* Efecto flotante con sombra y sin outline para todos los cuadros de texto */
+textarea, 
+input[type="text"], 
+input[type="file"], 
+input[type="email"], 
+input[type="number"], 
+input[type="password"], /* Por si añades campos de contraseña */
+select {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(200, 200, 200, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3); /* Sombra constante */
+    color: #000;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    resize: none;
+    overflow: hidden;
+    outline: none; /* Eliminar el outline siempre */
+}
+
+/* Efecto flotante al hacer clic o cuando el cuadro está enfocado */
+textarea:focus, 
+input[type="text"]:focus, 
+input[type="file"]:focus, 
+input[type="email"]:focus, 
+input[type="number"]:focus, 
+input[type="password"]:focus, 
+select:focus {
+    outline: none; /* Asegura que no aparezca outline */
+    background-color: rgba(200, 200, 200, 0.4); /* Fondo más oscuro al hacer clic */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); /* Sombra más grande al hacer clic */
+    transform: translateY(-3px); /* Levantar ligeramente el cuadro */
+}
+
+/* Efecto de clic (active) para los cuadros de texto */
+textarea:active, 
+input[type="text"]:active, 
+input[type="file"]:active, 
+input[type="email"]:active, 
+input[type="number"]:active, 
+input[type="password"]:active, 
+select:active {
+    transform: scale(0.98); /* Efecto de hundimiento al hacer clic */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3); /* Sombra menos pronunciada al hacer clic */
+}
+
+/* Estilos para los campos de número, texto y correo */
+input[type="number"], input[type="text"], input[type="email"] {
+    width: 50%;
+    padding: 10px;
+    border: none;
+    border-radius: 10px;
+    background-color: rgba(200, 200, 200, 0.2);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    color: #000;
+    font-size: 16px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+    appearance: none;
+    -moz-appearance: textfield; /* Para Firefox */
+    line-height: 1.5; /* Asegura la altura de la línea correcta */
+    vertical-align: middle; /* Alinear el contenido verticalmente en el medio */
+}
+
+/* Efecto flotante cuando el cuadro de texto está enfocado */
+input[type="number"]:focus, input[type="text"]:focus, input[type="email"]:focus {
+    outline: none;
+    background-color: rgba(200, 200, 200, 0.4); /* Fondo más oscuro al hacer clic */
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.4); /* Efecto flotante */
+    transform: translateY(-3px); /* Levantar ligeramente el cuadro */
+
+
+
+
+}
+
+
+
+/* Estilos para las flechas en los campos de número */
+input[type="number"]::-webkit-inner-spin-button, 
+input[type="number"]::-webkit-outer-spin-button {
+    background-color: rgba(255, 255, 255, 0.4); /* Fondo más transparente */
+    border: none; /* Eliminar borde visible */
+    color: black;
+    width: 8px; /* Tamaño reducido */
+    height: calc(100% - 12px); /* Ajuste de altura */
+    cursor: pointer;
+    display: flex;
+    align-items: center; /* Centrar verticalmente */
+    justify-content: center; /* Centrar horizontalmente */
+    padding: 0;
+    margin: 0;
+    position: absolute;
+    right: 10px; /* Posición a la derecha */
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: all;
+    transition: all 0.3s ease;
+    border-radius: 10px; /* Más redondeado */
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4); /* Sombra más oscura */
+}
+
+/* Efecto hover: Resaltar el botón de las flechas */
+input[type="number"]::-webkit-inner-spin-button:hover, 
+input[type="number"]::-webkit-outer-spin-button:hover {
+    background-color: rgba(200, 200, 200, 0.5); /* Fondo más gris y difuminado */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Sombra más pronunciada */
+    transform: translateY(-50%) translateZ(5px); /* Efecto flotante */
+    border-radius: 10px;
+}
+
+/* Efecto clic (hundimiento) para las flechas */
+input[type="number"]::-webkit-inner-spin-button:active, 
+input[type="number"]::-webkit-outer-spin-button:active {
+    transform: scale(0.9) translateY(-50%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5); /* Sombra más leve al hacer clic */
+}
+
+
+
+/* Para Firefox */
+input[type="number"] {
+    -moz-appearance: textfield; /* Ocultar el estilo predeterminado en Firefox */
+    line-height: 1.5; /* Igualar la altura de línea */
+}
+
+        button {
+            padding: 10px 20px;
+            margin-top: 20px;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #333;
+        }
+
+        /* Estilos para los radio buttons en color rojo */
+        input[type="radio"] {
+            accent-color: rgba(139, 0, 0, 0.7); /* Color rojo similar al banner */
+        }
+
+        /* Estructura para el menú desplegable personalizado */
+        .custom-select {
+            position: relative;
+            display: inline-block;
+            width: 50%;
+        }
+
+        .select-selected {
+            background-color: rgba(200, 200, 200, 0.2); /* Fondo gris para el select cerrado */
+            padding: 10px;
+            border-radius: 10px;
+            color: #000;
+            font-size: 16px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Caja de opciones del menú desplegable */
+        .select-items {
+            position: absolute;
+            background-color: rgba(200, 200, 200, 0.9); /* Fondo gris para las opciones desplegadas */
+            top: 100%;
+            left: 0;
+            right: 0;
+            z-index: 99;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            overflow: hidden;
+            display: none;
+        }
+
+        /* Cada opción dentro del menú desplegable */
+        .select-items div {
+            color: #000;
+            padding: 10px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.3s ease;
+        }
+
+        /* Estilos de las opciones al pasar el cursor */
+        .select-items div:hover {
+            background-color: rgba(150, 150, 150, 0.9); /* Fondo más oscuro */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4); /* Efecto flotante */
+            transform: translateY(-2px); /* Movimiento flotante */
+        }
+
+        /* Mostrar las opciones cuando el select está activo */
+        .select-selected.select-arrow-active + .select-items {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+<form action="https://formspree.io/f/xanwgrqd" method="POST" enctype="multipart/form-data" id="formulario">
+
+
+<!-- Primera página: Nombre Completo y Correo Electrónico -->
+<div class="page active"> <!-- Página inicial -->
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label for="nombre">Nombre Completo:</label><br>
+    <input type="text" id="nombre" name="nombre" placeholder="Escribe tu nombre completo" required><br><br>
+
+    <label for="email">Correo Electrónico:</label><br>
+    <input type="email" id="email" name="email" placeholder="Escribe tu correo electrónico" required><br><br>
+
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Segunda página: Edad -->
+<div class="page"> <!-- Página para la edad -->
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label for="edad">Edad:</label><br>
+    <input type="number" id="edad" name="edad" placeholder="Escribe tu edad" required><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Tercera página: Altura -->
+<div class="page"> <!-- Página para la altura -->
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label for="altura">Altura (en cm):</label><br>
+    <input type="number" id="altura" name="altura" placeholder="Escribe tu altura en cm" required><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Cuarta página: Sexo -->
+<div class="page"> <!-- Página para el sexo -->
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label for="sexo">Sexo:</label><br>
+    <input type="radio" id="hombre" name="sexo" value="Hombre" required> Hombre
+    <input type="radio" id="mujer" name="sexo" value="Mujer" required> Mujer
+   
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+
+
+        <!-- Primera página -->
+        <div class="page">
+            <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+            <label>¿Hay alguna zona de tu cuerpo (músculos o articulaciones) que te moleste o cause incomodidad durante tus actividades diarias?</label><br>
+            <textarea name="problemas_musculares" placeholder="Describe tus molestias" required oninput="autoResize(this)"></textarea><br><br>
+            <button type="button" onclick="nextPage()">Siguiente</button>
+        </div>
+
+        <!-- Segunda página -->
+        <div class="page">
+            <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+            <label>¿Experimentas dolores recurrentes en tu vida diaria? Si es así, ¿en qué momentos y con qué frecuencia?</label><br>
+            <textarea name="dolores_recurrentes" placeholder="Frecuencia y situación" required oninput="autoResize(this)"></textarea><br><br>
+            <button type="button" onclick="nextPage()">Siguiente</button>
+        </div>
+
+<!-- Página con el desplegable personalizado -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cómo describirías tu salud cardiopulmonar? ¿Alguna vez has tenido dificultades respiratorias durante el ejercicio?</label><br>
+
+    <!-- Menú desplegable personalizado -->
+    <div class="custom-select">
+        <div class="select-selected">Buena</div>
+        <div class="select-items select-hide"> <!-- Asegúrate de que .select-hide esté definida en el CSS -->
+            <div class="select-option">Buena</div>
+            <div class="select-option">Moderada</div>
+            <div class="select-option">Deficiente</div>
+            <div class="select-option">Dificultades respiratorias</div>
+        </div>
+    </div>
+
+    <!-- Campo oculto para almacenar el valor seleccionado -->
+    <input type="hidden" name="salud_cardiopulmonar" id="hiddenSelect" value="Buena">
+
+    <!-- Botón "Siguiente" para pasar a la siguiente pregunta -->
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Segunda página: Historial de lesiones y afecciones médicas -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Podrías compartir un resumen de tu historial de lesiones que podrían influir en tu actividad física?</label><br>
+    <textarea name="historial_lesiones" placeholder="Describe tus lesiones o afecciones" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Tercera página: Diabetes, tiroides, fumador/no, alcohol y frecuencia -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Tienes alguna condición como diabetes o problemas de tiroides? ¿Fumas o consumes alcohol con regularidad?</label><br>
+    <textarea name="condiciones_medicas" placeholder="Diabetes, tiroides, fumador, alcohol y frecuencia" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Cuarta página: Herencia genética -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Tienes familiares que hayan sufrido enfermedades que podrían impactar en tu salud o rendimiento deportivo? Si la respuesta es sí, ¿Cuáles han sido?</label><br>
+    <textarea name="herencia_genetica" placeholder="Describe la herencia genética relevante" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Quinta página: Hidratación y nutrición general -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cuánta agua bebes al día y qué hábitos de alimentación tienes?</label><br>
+    <textarea name="hidratacion_nutricion" placeholder="Describe tu hidratación y nutrición" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Sexta página: Operaciones importantes -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Has tenido alguna operación importante que deba tenerse en cuenta? (ej. operaciones mayores, no apendicitis)</label><br>
+    <textarea name="operaciones_importantes" placeholder="Describe tus operaciones importantes" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Séptima página: Salud mental -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Hay algo sobre tu salud mental que debamos considerar para personalizar tu programa de entrenamiento?</label><br>
+    <textarea name="salud_mental" placeholder="Describe cualquier detalle relevante sobre tu salud mental" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Octava página: Mareos al levantarse o subir escaleras -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Sueles experimentar mareos al levantarte rápido o al subir escaleras?</label><br>
+    <input type="radio" name="mareos" value="Sí" required> Sí
+    <input type="radio" name="mareos" value="No" required> No<br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+
+<!-- Página 11: Peso y porcentaje graso -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cuál es tu peso actual y, si lo conoces, tu porcentaje de grasa corporal? ¿Tienes algún peso objetivo?</label><br>
+    <textarea name="peso_grasa" placeholder="Describe tu peso, porcentaje de grasa y objetivo" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 12: Longitud fémur, tibia, húmero, radio -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>Para una evaluación más precisa, ¿podrías compartir las longitudes aproximadas de tu fémur, tibia, húmero y radio?</label><br>
+    <textarea name="longitudes" placeholder="Escribe las longitudes de fémur, tibia, húmero y radio" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 13: Test de movilidad básica -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>Haz los siguientes ejercicios y evalúa del 1 al 10 la capacidad que tienes para realizarlos. También sube un video del test de movilidad.</label><br>
+    
+    <!-- Descripción del nivel de movilidad -->
+    <textarea name="movilidad_basica" placeholder="Describe tu nivel de movilidad" required oninput="autoResize(this)"></textarea><br><br>
+
+    <!-- Subida de video del test de movilidad -->
+    <label>Por favor, sube el video de tu test de movilidad:</label><br>
+    <input type="file" name="video_movilidad" accept="video/*" required><br><br>
+
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 14: ¿Qué haces en el trabajo? -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿En qué consiste tu trabajo diario? ¿Implica actividades físicas como cargar peso o caminar mucho?</label><br>
+    <textarea name="trabajo_fisico" placeholder="Describe tu actividad física en el trabajo" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 15: ¿Cuántas horas sueles dormir? -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cuántas horas duermes en promedio por la noche?</label><br>
+    <input type="number" name="horas_sueno" placeholder="Horas de sueño" required><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 16: Dificultades para conciliar el sueño -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Tienes dificultades para conciliar el sueño o mantenerlo durante la noche?</label><br>
+    <textarea name="dificultades_sueno" placeholder="Describe si tienes problemas de sueño" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 17: ¿Cómo te sientes en el día a día? -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cómo te sientes generalmente a lo largo del día: con energía, cansado, o en algún punto intermedio?</label><br>
+    <textarea name="energia_diaria" placeholder="Describe tu nivel de energía diario" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 18: ¿Cómo sueles comer? -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cómo describirías tus hábitos alimenticios? ¿Tiendes a comer de manera saludable o a incluir comida rápida en tu dieta frecuentemente?</label><br>
+    <textarea name="habitos_alimenticios" placeholder="Describe tus hábitos alimenticios" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 19: ¿Cuánto deporte haces al día? -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cuánto tiempo dedicas al deporte o ejercicio físico cada día: mucho, poco, o nada?</label><br>
+    <textarea name="deporte_diario" placeholder="Describe tu actividad deportiva diaria" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 20: Horas disponibles al día para entrenar -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Cuántas horas tienes disponibles al día para dedicar al entrenamiento?</label><br>
+    <input type="number" name="horas_entrenamiento" placeholder="Horas disponibles para entrenar" required><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+<!-- Página 21: Material disponible inicial -->
+<div class="page">
+    <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+    <label>¿Qué equipo o material de entrenamiento tienes disponible actualmente en casa antes de que comencemos a entrenar en el gimnasio?</label><br>
+    <textarea name="material_disponible" placeholder="Describe el material disponible" required oninput="autoResize(this)"></textarea><br><br>
+    <button type="button" onclick="nextPage()">Siguiente</button>
+</div>
+
+  <!-- Última pregunta -->
+        <div class="page">
+            <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+            <label>¿Usas alguna aplicación o dispositivo para seguir tu actividad física, como pulseras de actividad o relojes inteligentes?</label><br>
+            <textarea name="apps_seguimiento" placeholder="Describe las apps o dispositivos de seguimiento que usas" required oninput="autoResize(this)"></textarea><br><br>
+            <button type="button" onclick="enviarFormulario()">Enviar</button>
+        </div>
+
+        <!-- Página de Agradecimiento -->
+        <div class="page" id="agradecimiento" style="display:none;">
+            <img src="ISOTIPOnegro.png" class="logo" alt="Logo">
+            <h2>Ambrosio dice que vas a ponerte muy fuerte.</h2>
+            <p>(Y lo sabes)</p>
+        </div>
+    </form>
+
+    <script>
+        let currentPage = 0;
+        const pages = document.querySelectorAll('.page');
+
+        function nextPage() {
+            const current = pages[currentPage];
+            const inputs = current.querySelectorAll('textarea, input, select');
+            let valid = true;
+
+            inputs.forEach(input => {
+                if (!input.checkValidity()) {
+                    valid = false;
+                }
+            });
+
+            if (valid) {
+                current.classList.remove('active');
+                currentPage++;
+                if (currentPage < pages.length) {
+                    pages[currentPage].classList.add('active');
+                }
+            } else {
+                alert('Por favor, completa todos los campos requeridos antes de continuar.');
+            }
+        }
+
+        // Función para ajustar el tamaño de la caja de texto conforme se escribe
+        function autoResize(textarea) {
+            textarea.style.height = "auto";  
+            textarea.style.height = (textarea.scrollHeight) + "px";
+        }
+
+        // Menú desplegable personalizado
+        const selectItems = document.querySelector('.select-items');
+        const selectSelected = document.querySelector('.select-selected');
+        const hiddenSelect = document.querySelector('#hiddenSelect');
+
+        selectSelected.addEventListener('click', function () {
+            this.classList.toggle('select-arrow-active');
+            selectItems.classList.toggle('active');
+        });
+
+        selectItems.addEventListener('click', function (e) {
+            selectSelected.textContent = e.target.textContent;
+            hiddenSelect.value = e.target.textContent; // Actualizar el campo oculto
+            selectItems.classList.remove('active');
+            selectSelected.classList.remove('select-arrow-active');
+        });
+
+        // Función para enviar el formulario y mostrar la página de agradecimiento
+        function enviarFormulario() {
+            // Ocultar el formulario
+            document.getElementById('formulario').style.display = 'none';
+
+            // Mostrar la página de agradecimiento
+            document.getElementById('agradecimiento').style.display = 'block';
+
+            // Opcional: Enviar el formulario en segundo plano
+            document.getElementById('formulario').submit();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bienvenido al Cuestionario</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-image: url('BANNERyoutube.jpg'); /* Ruta de tu banner */
+            background-size: cover;
+            background-position: center;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: -1;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9); /* Fondo blanco semitransparente */
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.5s ease;
+        }
+
+        h1 {
+            font-size: 2em;
+            margin-bottom: 10px;
+            color: black;
+        }
+
+        p {
+            font-size: 1.2em;
+            margin-bottom: 20px;
+            color: black;
+        }
+
+        .quote {
+            font-size: 1.1em;
+            font-style: italic;
+            margin-bottom: 30px;
+            color: black;
+        }
+
+        .start-button {
+            background-color: black;
+            color: white;
+            padding: 15px 30px;
+            font-size: 1.2em;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        .start-button:hover {
+            background-color: #333;
+        }
+
+        .timer {
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: black;
+        }
+
+        .key-info {
+            font-size: 0.9em;
+            color: #666;
+        }
+
+        /* Efecto fade-in */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="overlay"></div>
+
+    <div class="container">
+        <h1>Estás a un paso de llevar tus máximos a otro nivel.</h1>
+        <p class="quote">"La mente cumple lo que la voluntad desea" -Ambrosio-</p>
+        <button class="start-button" onclick="goToForm()">Comenzar</button><br>
+        <span class="key-info">pulsa Enter ↵</span>
+        <p class="timer">Dura aproximadamente 10 minutos</p>
+    </div>
+
+    <script>
+        // Función para redirigir al formulario
+        function goToForm() {
+            window.location.href = 'formulario.html'; // Cambia 'formulario.html' por la ruta de tu archivo de formulario
+        }
+
+        // Detectar si el usuario pulsa la tecla "Enter" para comenzar
+        document.addEventListener('keydown', function(event) {
+            if (event.key === "Enter") {
+                goToForm();
+            }
+        });
+    </script>
+</body>
+</html>
